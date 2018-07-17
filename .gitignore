@@ -1,0 +1,10 @@
+/venv
+.my_kyivstar.yaml
+*.py[co]
+__pycache__/
+.cache/
+*.egg-info/
+.eggs/
+.coverage
+.idea
+htmlcov/
