@@ -16,6 +16,7 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.6",
     ],
+    py_modules=["my_kyivstar"],
     install_requires=[
         'requests',
         'requests-toolbelt',

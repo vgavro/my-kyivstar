@@ -1,5 +1,5 @@
 /venv
-.my_kyivstar.yaml
+.my-kyivstar.yaml
 *.py[co]
 __pycache__/
 .cache/

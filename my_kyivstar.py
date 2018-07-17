@@ -12,7 +12,7 @@ from pygments.formatters import TerminalFormatter
 
 
 def pprint(data):
-    rv = json.dumps(data, indent=4, sort_keys=True, ensure_ascii=False)
+    rv = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False)
     print(highlight(rv, JsonLexer(), TerminalFormatter()))
 
 
@@ -24,7 +24,7 @@ class KyivstarSession(BaseUrlSession):
         super().__init__(**kwargs)
 
     def login(self):
-        # This is heavilly based on https://github.com/dukegh/kyivstar/blob/master/Kyivstar.php
+        # This is based on https://github.com/dukegh/kyivstar/blob/master/Kyivstar.php
         # Many thanks to him for this!
         resp = self.get('cas/login')
         doc = html.fromstring(resp.text)
@@ -67,12 +67,12 @@ class KyivstarSession(BaseUrlSession):
 
 
 def main():
-    for config_path in ('.my_kievstar.yaml', os.path.expanduser('~/.my_kievstar.yaml')):
+    for config_path in ('.my-kyivstar.yaml', os.path.expanduser('~/.my-kyivstar.yaml')):
         if os.path.exists(config_path):
             session = KyivstarSession(**yaml.load(open(config_path)))
-        break
+            break
     else:
-        raise RuntimeError('Expected config in .my_kievstar.yaml or ~/.my_kievstar.yaml')
+        raise RuntimeError('Expected config in .my-kyivstar.yaml or ~/.my-kyivstar.yaml')
 
     session.login()
     data = session.get_account_info()
