@@ -1,4 +1,4 @@
-# my-kievstar cli interface
+# my-kyivstar cli interface
 
 Grabs balance and useful statistics from https://account.kyivstar.ua
 Парсит баланс и полезную статистику из https://account.kyivstar.ua
@@ -15,13 +15,13 @@ git clone https://github.com/vgavro/my-kyivstar
 sudo pip install ./my-kyivstar
 ```
 
-Create config in `~/.my-kievstar.yaml`
+Create config in `~/.my-kyivstar.yaml`
 ```
 phone: +380...
 password: your-password
 ```
 
-Then run `my-kievstar` to get balance.
+Then run `my-kyivstar` to get balance.
 
 Response example:
 ```
