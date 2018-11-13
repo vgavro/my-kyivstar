@@ -9,11 +9,6 @@ from lxml import html
 import yaml
 
 
-def pprint(data):
-    rv = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False)
-    print(highlight(rv, JsonLexer(), TerminalFormatter()))
-
-
 class KyivstarSession(BaseUrlSession):
     base_url = 'https://account.kyivstar.ua/'
 

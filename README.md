@@ -11,8 +11,7 @@ Many thanks to him for this!
 Python 3.6+ required.
 
 ```
-git clone https://github.com/vgavro/my-kyivstar
-sudo pip install ./my-kyivstar
+sudo pip install my-kyivstar
 ```
 
 Create config in `~/.my-kyivstar.yaml`
@@ -24,6 +23,15 @@ password: your-password
 Then run `my-kyivstar` to get balance.
 
 Response example:
+```
+PREPAID 44,22 грн [Следующий платеж (28.11.2018) 95,00]
+Минуты на другие мобильные: 01 ч. 15 мин. [28.11.2018]
+Интернет: 4 496 МБ [28.11.2018]
+SMS по Украине: 0 SMS [28.11.2018]
+Остаток бонусных средств  «Экстра Деньги» 0,00 грн [21.02.2026]
+```
+
+Or you can get raw json using `my-kyivstar --json`:
 ```
 {
   "accountData": {
