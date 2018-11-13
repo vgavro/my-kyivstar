@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 import re
 import json
 import os.path
@@ -6,9 +7,6 @@ import os.path
 from requests_toolbelt.sessions import BaseUrlSession
 from lxml import html
 import yaml
-from pygments import highlight
-from pygments.lexers import JsonLexer
-from pygments.formatters import TerminalFormatter
 
 
 def pprint(data):
@@ -63,7 +61,23 @@ class KyivstarSession(BaseUrlSession):
     def get_account_info(self):
         resp = self.get('https://new.kyivstar.ua/ecare/')
         data = self._parse_page_data(resp)
-        return data['slots']['RightContent'][0]['data']
+        try:
+            return data['slots']['RightContent'][0]['data']
+        except KeyError:
+            print(data)
+            raise
+
+
+def format_account_info(data):
+    rv = (
+        f"{data['subscriptionType']} {data['accountData']['balance']} {data['currencyName']} "
+        f"[{data['accountData']['gsmNextPaymentValue']['label']} "
+        f"{data['accountData']['gsmNextPaymentValue']['value']} {data['currencyName']}]"
+    )
+    for b in data['bonusBalance']['bonusBalances']:
+        amount = ' '.join('{value} {unit}'.format(**a) for a in b['balanceAmount'])
+        rv += (f"\n{b['name']} {amount} [{b['bonusExpirationDate']}]")
+    return rv
 
 
 def main():
@@ -76,7 +90,10 @@ def main():
 
     session.login()
     data = session.get_account_info()
-    pprint(data)
+    if '--json' in sys.argv:
+        print(json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False))
+    else:
+        print(format_account_info(data))
 
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="my-kyivstar",
-    version="0.0.1",
+    version="0.0.2",
     description="Check balance using cli from account.kyivstar.ua",
     author="Victor Gavro",
     author_email="vgavro@gmail.com",
@@ -23,7 +23,6 @@ setup(
         'lxml',
         'cssselect',
         'pyyaml',
-        'pygments',
     ],
     entry_points={
         'console_scripts': [
