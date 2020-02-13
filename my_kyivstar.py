@@ -6,7 +6,10 @@ import os.path
 
 from requests_toolbelt.sessions import BaseUrlSession
 from lxml import html
-import yaml
+try:
+    from yaml import safe_load as yaml_load
+except ImportError:
+    from yaml import load as yaml_load
 
 
 class KyivstarSession(BaseUrlSession):
@@ -57,7 +60,10 @@ class KyivstarSession(BaseUrlSession):
         resp = self.get('https://new.kyivstar.ua/ecare/')
         data = self._parse_page_data(resp)
         try:
-            return data['slots']['RightContent'][0]['data']
+            for item in data['slots']['RightContent']:
+                if 'subscriptionType' in item.get('data', {}):
+                    return item['data']
+            raise RuntimeError('data.slots.RightContent.[].data.subscriptionType not found')
         except KeyError:
             print(data)
             raise
@@ -65,20 +71,20 @@ class KyivstarSession(BaseUrlSession):
 
 def format_account_info(data):
     rv = (
-        f"{data['subscriptionType']} {data['accountData']['balance']} {data['currencyName']} "
-        f"[{data['accountData']['gsmNextPaymentValue']['label']} "
-        f"{data['accountData']['gsmNextPaymentValue']['value']} {data['currencyName']}]"
+        f"{data['subscriptionType']} {data['accountData']['balance']} {data['currencyName']}\n"
+        f"{data['accountData']['gsmNextPaymentValue']['label']}: "
+        f"{data['accountData']['gsmNextPaymentValue']['value']} {data['currencyName']}"
     )
     for b in data['bonusBalance']['bonusBalances']:
         amount = ' '.join('{value} {unit}'.format(**a) for a in b['balanceAmount'])
-        rv += (f"\n{b['name']} {amount} [{b['bonusExpirationDate']}]")
+        rv += (f"\n{b['name']}: {amount} [{b['bonusExpirationDate']}]")
     return rv
 
 
 def main():
     for config_path in ('.my-kyivstar.yaml', os.path.expanduser('~/.my-kyivstar.yaml')):
         if os.path.exists(config_path):
-            session = KyivstarSession(**yaml.load(open(config_path)))
+            session = KyivstarSession(**yaml_load(open(config_path)))
             break
     else:
         raise RuntimeError('Expected config in .my-kyivstar.yaml or ~/.my-kyivstar.yaml')
@@ -88,7 +94,12 @@ def main():
     if '--json' in sys.argv:
         print(json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False))
     else:
-        print(format_account_info(data))
+        try:
+            print(format_account_info(data))
+        except KeyError as exc:
+            print(f'Format account info error: {exc}')
+            print(json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False))
+            sys.exit(1)
 
 
 if __name__ == '__main__':
