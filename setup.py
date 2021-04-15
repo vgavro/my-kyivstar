@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="my-kyivstar",
-    version="0.0.2",
+    version="0.0.3",
     description="Check balance using cli from account.kyivstar.ua",
     author="Victor Gavro",
     author_email="vgavro@gmail.com",
