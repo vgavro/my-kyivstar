@@ -27,12 +27,13 @@ class KyivstarSession(BaseUrlSession):
         lt = doc.cssselect('input[name=lt]')[0].value
         execution = doc.cssselect('input[name=execution]')[0].value
         jsessionid = self.cookies['JSESSIONID']
-
         resp = self.get(f'cas/auth/auth.nocache.js;jsessionid={jsessionid}')
-        bc = re.search('bc=\'([\w\d]+)\'', resp.text).group(1)
+        assert resp.status_code == 200
+        bc = re.search('\[\'safari\'\], \'([\w\d]+)\'', resp.text).group(1)
 
         resp = self.get(f'cas/auth/{bc}.cache.js')
-        auth_hash = re.search('\'authSupport\.rpc\',\'([\w\d]+)\'', resp.text).group(1)
+        assert resp.status_code == 200
+        auth_hash = re.search('\'authSupport\.rpc\',\s*\'([\w\d]+)\'', resp.text).group(1)
 
         payload = (
             f'7|0|9|https://account.kyivstar.ua/cas/auth/|{auth_hash}|'
