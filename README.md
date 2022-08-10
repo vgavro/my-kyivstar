@@ -1,5 +1,12 @@
 # my-kyivstar cli interface
 
+-------------------
+
+### NOTE: After Kyivstar changed their authentication logic on web interface - this script doesn't work anymore
+For details (or if you willing to fix it) see https://github.com/vgavro/my-kyivstar/issues/2#issuecomment-1210487639
+
+-------------------
+
 Grabs balance and useful statistics from https://account.kyivstar.ua
 Парсит баланс и полезную статистику из https://account.kyivstar.ua
 
